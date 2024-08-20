@@ -1,13 +1,15 @@
 from transformers import DetrImageProcessor, DetrForObjectDetection
 import torch
 from PIL import Image, ImageDraw
+from io import BytesIO
 
 class Segmenting_objects:
-    def __init__(self, model_url, img_path):
+    def __init__(self,input_image):
         # Loading the pretrained model from huggingface
-        self.processor = DetrImageProcessor.from_pretrained(model_url, revision="no_timm")
-        self.model = DetrForObjectDetection.from_pretrained(model_url, revision="no_timm")
-        self.input_img = Image.open(img_path)
+        self.model_url = "facebook/detr-resnet-50"
+        self.processor = DetrImageProcessor.from_pretrained(self.model_url, revision="no_timm")
+        self.model = DetrForObjectDetection.from_pretrained(self.model_url, revision="no_timm")
+        self.input_img = input_image
         
     def segmentation(self):
         # Passing the input image through the processor to get the input_img in the required form 
@@ -34,11 +36,7 @@ class Segmenting_objects:
             x_min, y_min, x_max, y_max = bbox
             draw.rectangle([x_min, y_min, x_max, y_max], outline='red', width=3)
         
-        # Display the image
-        image.show()
+        return image
         
 if __name__ == "__main__":
-    url = "facebook/detr-resnet-50"
-    img_path = "data/input_images/obj_det_1.jpg"
-    app = Segmenting_objects(url, img_path)
-    app.segmentation()
+    pass
